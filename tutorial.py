@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
+import sys
 import pygame
 from pygame.locals import *
-import sys
 
 def main():
-    (w,h) = (400,400)   # 画面サイズ
+    (width, height) = (400, 400)   # 画面サイズ
     pygame.init()       # pygame初期化
-    pygame.display.set_mode((w, h), 0, 32)  # 画面設定
+    pygame.display.set_mode((width, height), 0, 32)  # 画面設定
     screen = pygame.display.get_surface()
     font = pygame.font.Font(None, 55)
     screen.fill((0, 0, 0, 0))  # 画面の背景色
-    text = font.render("Try Shoryuken", True, (255,255,255))
+    text = font.render("Try Shoryuken", True, (255, 255, 255))
     screen.blit(text, (50, 100))
 
     states = ["none", "right", "down", "right-down", "punches"]
-    stateIndex = 0
-    previousKey = K_SPACE
+    state_index = 0
+    prev_key = K_SPACE
 
-    while (1):
+    while 1:
         pygame.display.update()     # 画面更新
         pygame.time.wait(30)        # 更新時間間隔
-        print(stateIndex)
+        print(states[state_index])
         # イベント処理
         for event in pygame.event.get():
             # 画面の閉じるボタンを押したとき
@@ -35,52 +35,57 @@ def main():
                     pygame.quit()
                     sys.exit()
 
-                if stateIndex == 0:
-                    stateIndex = checkRight(event.key)
-                elif stateIndex == 1:
-                    stateIndex = checkDown(event.key)
-                elif stateIndex == 2:
-                    stateIndex = checkRightDown(event.key, previousKey)
-                elif stateIndex == 3:
-                    stateIndex = checkPunches(event.key)
-                
-                previousKey = event.key
-            #else:
-                #stateIndex = 0
+                if state_index == 0:
+                    state_index = check_right(event.key)
+                elif state_index == 1:
+                    state_index = check_down(event.key)
+                elif state_index == 2:
+                    state_index = check_rightdown(event.key, prev_key)
+                elif state_index == 3:
+                    state_index = check_punches(event.key)
 
-            if stateIndex == 4:
-                 text = font.render("!!!Shoryuken!!!", True, (255,0,0))
-                 screen.blit(text, (50, 250))
+                prev_key = event.key
+            # else:
+                #state_index = 0
 
-def checkRight(key):
+            if state_index == 4:
+                text = font.render("!!!Shoryuken!!!", True, (255, 0, 0))
+                screen.blit(text, (50, 250))
+
+
+def check_right(key):
     if key == K_RIGHT:
-        stateIndex = 1
+        state_index = 1
     else:
-        stateIndex = 0
-    return stateIndex
+        state_index = 0
+    return state_index
 
-def checkDown(key):
+
+def check_down(key):
     if key == K_DOWN:
-        stateIndex = 2
+        state_index = 2
     else:
-        stateIndex = 0
-    return stateIndex
+        state_index = 0
+    return state_index
 
-def checkRightDown(key, previousKey):
-    if key == K_DOWN and previousKey == K_RIGHT:
-        stateIndex = 3
-    elif key == K_RIGHT and previousKey == K_DOWN:
-        stateIndex = 3
+
+def check_rightdown(key, prev_key):
+    if key == K_DOWN and prev_key == K_RIGHT:
+        state_index = 3
+    elif key == K_RIGHT and prev_key == K_DOWN:
+        state_index = 3
     else:
-        stateIndex = 0
-    return stateIndex
+        state_index = 0
+    return state_index
 
-def checkPunches(key):
+
+def check_punches(key):
     if key == K_p:
-        stateIndex = 4
+        state_index = 4
     else:
-        stateIndex = 0
-    return stateIndex
+        state_index = 0
+    return state_index
+
 
 if __name__ == "__main__":
     main()
